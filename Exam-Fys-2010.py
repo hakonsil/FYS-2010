@@ -4,6 +4,10 @@ import skimage
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+# test test test 
+
+
 """TASK 1"""
 # importing the images
 jupiter1 = cv2.imread(r'Homeexam supplementary data\Jupiter1.png')
