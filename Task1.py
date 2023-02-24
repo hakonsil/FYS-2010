@@ -25,10 +25,10 @@ plt.ylabel('Number of pixels')
 plt.title('Greyscale histogram of Jupiter2.png')
 plt.show()
 
-# creating the color histograms
+# creating the color histogram of jupiter1
 for i in range(0, 3):
     histogram, bin_edges = np.histogram(np.array(jupiter1)[:, :, i], bins=256, range=(0, 256))
-    plt.plot(bin_edges[0:-1], histogram, color='rgb'[i])
+    plt.plot(bin_edges[0:-1], histogram, color='bgr'[i])
 plt.title("Color Histogram of Jupiter1.png")
 plt.xlabel("Color value")
 plt.ylabel("Pixel count")
@@ -59,7 +59,7 @@ def notch_reject_filter(shape, Q, u_k, v_k):
 # Firstly I split the image into its separate color channels
 # since the different color channels are not affected by the same noise
 # so they need different filters
-blue,green,red = cv2.split(jupiter1) # separating color channels
+blue, green, red = cv2.split(jupiter1) # separating color channels
 
 # creating the magnitude spectrum of the red channel
 # so we can see which frequencies to filter out
@@ -180,7 +180,7 @@ cv2.destroyAllWindows()
 
 for i in range(0, 3):
     histogram, bin_edges = np.histogram(np.array(jupiter1)[:, :, i], bins=256, range=(0, 256))
-    plt.plot(bin_edges[0:-1], histogram, color='rgb'[i])
+    plt.plot(bin_edges[0:-1], histogram, color='bgr'[i])
 plt.title("Color Histogram of Jupiter1.png")
 plt.xlabel("Color value")
 plt.ylabel("Pixel count")
@@ -188,8 +188,8 @@ plt.show()
 
 for i in range(0, 3):
     histogram, bin_edges = np.histogram(np.array(restored_jupiter1)[:, :, i], bins=256, range=(0, 256))
-    plt.plot(bin_edges[0:-1], histogram, color='rgb'[i])
-plt.title("Color Histogram of Jupiter1.png")
+    plt.plot(bin_edges[0:-1], histogram, color='bgr'[i])
+plt.title("Color Histogram of restored Jupiter1.png")
 plt.xlabel("Color value")
 plt.ylabel("Pixel count")
 plt.show()
