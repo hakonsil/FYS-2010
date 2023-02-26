@@ -6,17 +6,6 @@ jupiter1 = cv2.imread(r'Plots\restored_jupiter1.png')
 jupiter2 = cv2.imread(r'Plots\restored_jupiter2.png')
 
 """Creating filters"""
-
-#plot histogram of jupiter1
-jupiter1_hist, bin_edges_jup1 = np.histogram(np.array(jupiter1), bins=256)
-jupiter2_hist, bin_edges_jup2 = np.histogram(np.array(jupiter2), bins=256)
-
-# plotting the greyscale histograms
-"""plt.bar(bin_edges_jup1[0:-1], jupiter1_hist, color = 'k')
-plt.xlabel('Pixel value')
-plt.ylabel('Number of pixels')
-plt.title('Greyscale histogram of Jupiter1.png')
-plt.show()"""
 def contrast_stretching(img, min, max):
     """Performs contrast stretching on the input image, min and max 
     refer to the values that are stretched, i.e. min becomes 0 and max becomes 255"""
@@ -43,28 +32,35 @@ def apply_gamma_correction(img, gamma=1.1):
     return img
 
 def laplacian(f, c):
-    f = f/255
-    F = np.fft.fftshift(np.fft.fft2(f))
+    """Calculates the laplacian of the input image,
+    and adds it to the image with a constant c (output is clipped to (0,1))"""
+    f = f/255 #normalize the input function
+    F = np.fft.fft2(f) #2D discrete Fourier transform
+    F = np.fft.fftshift(F) # shifting the ffrequency components
 
-    P, Q = F.shape
-    H = np.zeros((P, Q), dtype=np.float32)
+    P, Q = F.shape #dimensions of the image
+    H = np.zeros((P, Q), dtype=np.float32) #initializing the transfer function
     for u in range(P):
         for v in range(Q):
-            H[u][v] = -4*np.pi*np.pi*((u-P/2)**2 + (v-Q/2)**2)
-    Lap = H*F
-    Lap = np.fft.ifftshift(Lap)
-    Lap = np.real(np.fft.ifft2(Lap))
+            # iterating through the transfer function, and calculating appropriate values
+            D2 = ((u-P/2)**2 + (v-Q/2)**2) #euclidean distance from center squared
+            H[u][v] = -4*(np.pi**2)*D2 # transfer function
 
-    oldrange = (np.max(Lap) - np.min(Lap))
+    Lap = np.fft.ifftshift(H*F) # calculating the laplacian and shifting the frequency components back
+    Lap = np.real(np.fft.ifft2(Lap)) # discarding the imaginary part of the laplacian (we only care about the real part)
+
+    # we need to scale the laplacian to be between -1 and 1 
+    # (since the values are very big, so we need the laplacian and the image to be on the same scale)
+    oldrange = (np.max(Lap) - np.min(Lap)) 
     newrange = 1 - -1
-    Lapscaled = (((Lap - np.min(Lap)) * newrange) / oldrange) - 1
+    Lap_scaled = (((Lap - np.min(Lap)) * newrange) / oldrange) - 1 #scaling the laplacian to (-1, 1)
 
 
-    g = f + c*Lapscaled
-    g = np.clip(g, 0, 1)
+    g = f + c*Lap_scaled # adding the laplacian to the image (scaled by c)
+    g = np.clip(g, 0, 1) #clipping the image to (0, 1) since we need the image to be no
     return g
 
-def apply_laplacian(img, red_c = -0, green_c = -0.2, blue_c = -0.5):
+def apply_laplacian(img, red_c = -1, green_c = -1, blue_c = -1):
     """Applies the laplacian filter to input image (only works for color images)
     The values of c are chosen to give the best results"""
     b, g, r = cv2.split(img)
@@ -78,29 +74,44 @@ def apply_laplacian(img, red_c = -0, green_c = -0.2, blue_c = -0.5):
     return x
 
 """Applying filters"""
-img = jupiter1
-enhanced_jupiter1 = apply_contrast_stretching(img, 15, 245)
-enhanced_jupiter1 = apply_gamma_correction(enhanced_jupiter1, 1.2)
-img = enhanced_jupiter1
-img1 = apply_laplacian(img, -0, -0.2, -1)
-img2 = apply_laplacian(img, -0.2, -0, -1)
-img3 = apply_laplacian(img, -0.1, -0.1, -1)
+# For jupiter1
+# contrast stretching
+jupiter1_contrast = apply_contrast_stretching(jupiter1, 15, 245)
 
-comparison1 = np.concatenate((img, img1), axis=0)
-comparison2 = np.concatenate((img2, img3), axis=0)
-comparison = np.concatenate((comparison1, comparison2), axis=1)
+# gamma correction
+jupiter1_gamma = apply_gamma_correction(jupiter1_contrast, 1.2)
 
-# scale image to 50% of original size
-comparison = cv2.resize(comparison, (0,0), fx=0.6, fy=0.6)
-cv2.imshow('Comparison', comparison)
+# laplacian
+jupiter1_laplacian = apply_laplacian(jupiter1, -0, -0.2, -1)
+
+#compare with original
+compare1 = np.concatenate((jupiter1, jupiter1_laplacian), axis=1)
+cv2.imshow('Before and after enhancement jupiter1', compare1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-"""Laplacian looks bad, at least for jupiter1, so I will not use it, but keep it
-just in case, maybe its good for jupiter2, will atleast get points for it"""
+# For jupiter2
+# contrast stretching
+jupiter2_contrast = apply_contrast_stretching(jupiter2, 25, 225)
 
-# best contrast stretching values for jupiter1: 15, 245
-# best gamma correction values for jupiter1: 1.2
-# best total result for jupiter1: contrast stretching with 15, 245 then
-# gamma correction with 1.2
+# gamma correction
+jupiter2_gamma = apply_gamma_correction(jupiter2_contrast, 1.05)
 
+# compare with original
+compare2 = np.concatenate((jupiter2, jupiter2_gamma), axis=1)
+cv2.imshow('Before and after enhancement jupiter2', compare2)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+#show before and after histogram of jupiter2
+plt.hist(jupiter2.ravel(),256,[0,256], color = 'k')
+plt.title('Histogram of jupiter2 before enhancement')
+plt.xlabel('Pixel value')
+plt.ylabel('Pixel count')
+plt.show()
+
+plt.hist(jupiter2_gamma.ravel(),256,[0,256], color = 'k')
+plt.title('Histogram of jupiter2 after enhancement')
+plt.xlabel('Pixel value')
+plt.ylabel('Pixel count')
+plt.show()
