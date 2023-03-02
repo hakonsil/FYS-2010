@@ -99,11 +99,12 @@ red = np.fft.ifft2(red) # inverse fourier transform
 red = np.abs(red) # get magnitude
 
 # plotting the magnitude spectrum of the red channel and the filter
-plt.subplot(1,2,2)
+
 plt.imshow(H*magnitude_img, cmap='gray')
 plt.title('Notch reject filter applied to red channel')
 plt.axis('off')
-plt.subplot(1,2,1)
+plt.show()
+
 plt.imshow(magnitude_img, cmap='gray')
 plt.title('Magnitude spectrum of red channel')
 plt.axis('off')
@@ -157,11 +158,10 @@ def filter_img(img, H):
     img = np.array(img, dtype=np.uint8)
 
     #plotting the magnitude spectrum of the image and the filter
-    plt.subplot(1,2,2)
     plt.imshow(H*magnitude_img, cmap='gray')
     plt.title('Magnitude spectrum of notch reject filter')
     plt.axis('off')
-    plt.subplot(1,2,1)
+    plt.show()
     plt.imshow(magnitude_img, cmap='gray')
     plt.title('Magnitude spectrum of image')
     plt.axis('off')
