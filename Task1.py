@@ -136,6 +136,8 @@ cv2.imshow('Restored Jupiter1', restored_jupiter1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+
+
 # applying the filters to jupiter2
 def filter_img(img, H):
     """Applies a filter H on an image img (filter is applied on all color channels)"""
