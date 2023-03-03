@@ -85,10 +85,13 @@ jupiter1_gamma = apply_gamma_correction(jupiter1_contrast, 1.2)
 jupiter1_laplacian = apply_laplacian(jupiter1, -0, -0.2, -1)
 
 #compare with original
-compare1 = np.concatenate((jupiter1, jupiter1_laplacian), axis=1)
-cv2.imshow('Before and after enhancement jupiter1', compare1)
+compare1 = np.concatenate((jupiter1, jupiter1_contrast), axis=1)
+compare2 = np.concatenate((jupiter1_gamma, jupiter1_laplacian), axis=1)
+compare = np.concatenate((compare1, compare2), axis=0)
+cv2.imshow('Before and after enhancement jupiter1', compare)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
 
 # For jupiter2
 # contrast stretching

@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 
 #importing the data files
-data1 = np.load(r'C:\Users\Håkon\Documents\Skole\FYS-2010\Home-exam-fys-2010\Homeexam supplementary data\point_cloud.npz')
-data2 = np.load(r'C:\Users\Håkon\Documents\Skole\FYS-2010\Home-exam-fys-2010\Homeexam supplementary data\point_cloud_Laplacian.npz')
+data1 = np.load(r'Homeexam supplementary data\point_cloud.npz')
+data2 = np.load(r'Homeexam supplementary data\point_cloud_Laplacian.npz')
 
 # The point cloud is just a random subset of the pixels in the original image (coffee.png)
 # The coorridates of each pixel are stored in X as [x, y], and the intensity of the corresponding pixel is stored in Z.
@@ -17,16 +17,16 @@ L = data2['L'] #Laplacian
 
 """Task 4.1"""
 # creating a scatter plot of the data
-"""plt.scatter(X[:,0], X[:,1], c=Z, cmap='gray')
+plt.scatter(X[:,0], X[:,1], c=Z, cmap='gray')
 plt.ylim(600, 0)
-plt.show()"""
+plt.show()
 
 """Task 4.2"""
 #plot histogram of Z
-"""plt.hist(Z, bins=100, color='k')
+plt.hist(Z, bins=100, color='k')
 plt.xlabel('Pixel value')
 plt.ylabel('Pixel count')
-plt.show()"""
+plt.show()
 
 """Task 4.3"""
 # eigenvectors are the same as fourier modes
@@ -39,24 +39,24 @@ plt.show()"""
 eigenvalues, eigenvectors = np.linalg.eigh(L)
 
 # plotting the eigenvalues
-"""plt.plot(eigenvalues, color='k')
+plt.plot(eigenvalues, color='k')
 plt.xlabel('Eigenvalue number')
 plt.ylabel('Eigenvalue')
-plt.show()"""
+plt.show()
 
 # check if we have all positive values
-"""if np.min(eigenvalues) < 0:
+if np.min(eigenvalues) < 0:
     print('The eigenvalues are not all positive...')
 elif np.min(eigenvalues) > 0:
-    print('The eigenvalues are all positive!')"""
+    print('The eigenvalues are all positive!')
 
 
 """Task 4.4"""
-"""plt.scatter(X[:,0], X[:,1], c=eigenvectors[1], cmap='gray')
+plt.scatter(X[:,0], X[:,1], c=eigenvectors[1], cmap='gray')
 plt.axis('off')
 plt.ylim(600, 0)
 plt.title('Eigenvalue number: 2')
-plt.show()"""
+plt.show()
 
 
 """Task 4.5"""
@@ -68,13 +68,13 @@ plt.show()"""
 
 GFT = eigenvectors.T @ Z # computing the graph fourier transform
 # plotting
-"""plt.plot(eigenvalues, GFT, color='k')
+plt.plot(eigenvalues, GFT, color='k')
 plt.xlabel('Eigenvalue (frequency))')
 plt.ylabel('Graph fourier transform')
 plt.show()
 # double checking the dimensions of GFT
 print(GFT.shape)
-"""
+
 
 """Task 4.6"""
 #the easiest way to implement an ideal low pass filter is to create a unit step function 
@@ -94,8 +94,8 @@ for i in range(len(filter)):
         filter[i] = 0
 
 lowpassfiltered_GFT = GFT*filter # filtering the gft
-#plt.plot(eigenvalues,lowpassfiltered_GFT, color='k')
-#plt.show()
+plt.plot(eigenvalues,lowpassfiltered_GFT, color='k')
+plt.show()
 
 # computing the inverse graph fourier transform
 # again using the wikipedia definition
