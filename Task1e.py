@@ -101,8 +101,9 @@ jupiter2_contrast = apply_contrast_stretching(jupiter2, 25, 225)
 jupiter2_gamma = apply_gamma_correction(jupiter2_contrast, 1.05)
 
 # compare with original
-compare2 = np.concatenate((jupiter2, jupiter2_gamma), axis=1)
+compare2 = np.concatenate((jupiter2, jupiter2_contrast, jupiter2_gamma), axis=1)
 cv2.imshow('Before and after enhancement jupiter2', compare2)
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 

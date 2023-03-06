@@ -17,13 +17,14 @@ L = data2['L'] #Laplacian
 
 """Task 4.1"""
 # creating a scatter plot of the data
-plt.scatter(X[:,0], X[:,1], c=Z, cmap='gray')
-plt.ylim(600, 0)
+plt.scatter(X[:,1], X[:,0], c=Z, cmap='gray')
+plt.ylim(400, 0)
 plt.show()
 
 """Task 4.2"""
 #plot histogram of Z
 plt.hist(Z, bins=100, color='k')
+plt.title('Histogram of z')
 plt.xlabel('Pixel value')
 plt.ylabel('Pixel count')
 plt.show()
@@ -40,6 +41,7 @@ eigenvalues, eigenvectors = np.linalg.eigh(L)
 
 # plotting the eigenvalues
 plt.plot(eigenvalues, color='k')
+plt.title('Eigenvalues')
 plt.xlabel('Eigenvalue number')
 plt.ylabel('Eigenvalue')
 plt.show()
@@ -49,7 +51,11 @@ if np.min(eigenvalues) < 0:
     print('The eigenvalues are not all positive...')
 elif np.min(eigenvalues) > 0:
     print('The eigenvalues are all positive!')
-
+#check if the eigenvalues are sorted
+for i in range(len(eigenvalues)-1):
+    if eigenvalues[i] > eigenvalues[i+1]:
+        print('The eigenvalues are not sorted...')
+        break
 
 """Task 4.4"""
 plt.scatter(X[:,0], X[:,1], c=eigenvectors[1], cmap='gray')
