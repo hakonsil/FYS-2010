@@ -2,12 +2,11 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-"""TASK 1"""
 # importing the images
 jupiter1 = cv2.imread(r'Homeexam supplementary data\Jupiter1.png')
 jupiter2 = cv2.imread(r'Homeexam supplementary data\Jupiter2.png')
 
-"""Task b"""
+"""---Task b---"""
 # creating the histograms
 jupiter1_hist, bin_edges_jup1 = np.histogram(np.array(jupiter1), bins=256)
 jupiter2_hist, bin_edges_jup2 = np.histogram(np.array(jupiter2), bins=256)
@@ -34,9 +33,11 @@ plt.xlabel("Color value")
 plt.ylabel("Pixel count")
 plt.show()
 
-"""Tasks c & d"""
+
+"""---Task c---"""
+
 def notch_reject_filter(shape, Q, u_k, v_k):
-    """Creates a notch reject filter with a circle of zeros around (u_k, v_k) with radius Q"""
+    """Creates a notch reject filter with a circle of zeros around (u_k, v_k) with radius Q, where u_k and v_k is the distance from the center of the filter to the center of the circle of zeros."""
     M, N = shape
     # Initialize filter with zeros
     H = np.zeros((M, N))
@@ -136,9 +137,8 @@ cv2.imshow('Restored Jupiter1', restored_jupiter1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+"""---Task d---"""
 
-
-# applying the filters to jupiter2
 def filter_img(img, H):
     """Applies a filter H on an image img (filter is applied on all color channels)"""
     #plot magnitude spectrum of image
@@ -180,6 +180,7 @@ cv2.imshow('Restored Jupiter2', restored_jupiter2)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+# plotting the color histograms of the original, and restored jupiter1
 for i in range(0, 3):
     histogram, bin_edges = np.histogram(np.array(jupiter1)[:, :, i], bins=256, range=(0, 256))
     plt.plot(bin_edges[0:-1], histogram, color='bgr'[i])

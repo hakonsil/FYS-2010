@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+
 #importing the restored images
 jupiter1 = cv2.imread(r'Plots\restored_jupiter1.png')
 jupiter2 = cv2.imread(r'Plots\restored_jupiter2.png')
