@@ -1,16 +1,11 @@
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 #importing the data files
 data1 = np.load(r'Homeexam supplementary data\point_cloud.npz')
 data2 = np.load(r'Homeexam supplementary data\point_cloud_Laplacian.npz')
 
-# The point cloud is just a random subset of the pixels in the original image (coffee.png)
-# The coorridates of each pixel are stored in X as [x, y], and the intensity of the corresponding pixel is stored in Z.
-# We also have the laplacian matrix L which stores the laplacian of each pixel in the point cloud.
-#extracting the data into matrices
+#extracting the data into arrays
 X = data1['X'] #coordinates
 Z = data1['Z'] #greyscale values
 L = data2['L'] #Laplacian
@@ -38,7 +33,7 @@ plt.show()
 
 # findin the eigenvalues and eigenvectors
 eigenvalues, eigenvectors = np.linalg.eigh(L)
-
+print(eigenvectors.shape)
 # plotting the eigenvalues
 plt.plot(eigenvalues, color='k')
 plt.title('Eigenvalues')
@@ -58,10 +53,11 @@ for i in range(len(eigenvalues)-1):
         break
 
 """Task 4.4"""
-plt.scatter(X[:,0], X[:,1], c=eigenvectors[1], cmap='gray')
+
+plt.scatter(X[:,0], X[:,1], c=eigenvectors[300], cmap='gray')
 plt.axis('off')
 plt.ylim(600, 0)
-plt.title('Eigenvalue number: 2')
+plt.title('Eigenvalue number: 1')
 plt.show()
 
 
@@ -75,8 +71,9 @@ plt.show()
 GFT = eigenvectors.T @ Z # computing the graph fourier transform
 # plotting
 plt.plot(eigenvalues, GFT, color='k')
+plt.title('Graph fourier transform of z')
 plt.xlabel('Eigenvalue (frequency))')
-plt.ylabel('Graph fourier transform')
+plt.ylabel('$\mathcal{GF}(z)$')
 plt.show()
 # double checking the dimensions of GFT
 print(GFT.shape)
@@ -100,7 +97,16 @@ for i in range(len(filter)):
         filter[i] = 0
 
 lowpassfiltered_GFT = GFT*filter # filtering the gft
+plt.plot(filter)
+plt.title('Low pass filter')
+plt.xlabel('Eigenvalue (frequency))')
+plt.ylabel('Filter value')
+plt.show()
+
 plt.plot(eigenvalues,lowpassfiltered_GFT, color='k')
+plt.title('Low pass filtered graph fourier transform of z, c='+ str(c))
+plt.xlabel('Eigenvalue (frequency))')
+plt.ylabel('$\mathcal{GF}(z)$')
 plt.show()
 
 # computing the inverse graph fourier transform
@@ -138,6 +144,18 @@ highpassfiltered_GFT = GFT*(1-filter) # filtering the gft
 
 highpassfiltered_Z = eigenvectors @ highpassfiltered_GFT
 
+plt.plot(1-filter)
+plt.title('High pass filter')
+plt.xlabel('Eigenvalue (frequency))')
+plt.ylabel('Filter value')
+plt.show()
+
+plt.plot(eigenvalues,highpassfiltered_GFT, color='k')
+plt.title('Low pass filtered graph fourier transform of z, c='+ str(c))
+plt.xlabel('Eigenvalue (frequency))')
+plt.ylabel('$\mathcal{GF}(z)$')
+plt.show()
+
 # plotting the filtered data
 plt.subplot(1,2,1)
 plt.scatter(X[:,1], X[:,0], c=highpassfiltered_Z, cmap='gray')
@@ -149,4 +167,34 @@ plt.scatter(X[:,1], X[:,0], c=Z, cmap='gray')
 plt.axis('off')
 plt.ylim(600, 0)
 plt.title('Original data')
+plt.show()
+
+
+coffee = plt.imread('Homeexam supplementary data\coffee.png')
+coffee_ft = np.fft.fftshift(np.fft.fft2(coffee))
+filter = np.copy(coffee_ft)
+c=50
+for i in range(len(filter)):
+    for j in range(len(filter[0])):
+        if np.sqrt((i-len(filter)/2)**2+(j-len(filter[0])/2)**2) < c:
+            filter[i][j] = 1
+        else:
+            filter[i][j] = 0
+#plotting the filter
+plt.imshow(np.abs(filter), cmap='gray')
+plt.axis('off')
+plt.title('Low pass filter, c='+ str(c))
+plt.show()
+highpass_coffee_ft = coffee_ft*(1-filter)
+lowpass_coffee_ft = coffee_ft*filter
+highpass_coffee = np.fft.ifft2(np.fft.ifftshift(highpass_coffee_ft))
+lowpass_coffee = np.fft.ifft2(np.fft.ifftshift(lowpass_coffee_ft))
+
+plt.imshow(np.abs(lowpass_coffee), cmap='gray')
+plt.axis('off')
+plt.title('Low pass filtered coffee, c='+ str(c))
+plt.show()
+plt.imshow(np.abs(highpass_coffee), cmap='gray')
+plt.axis('off')
+plt.title('Low pass filtered coffee, c='+ str(c))
 plt.show()
