@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #importing the restored images
-jupiter1 = cv2.imread(r'Plots\restored_jupiter1.png')
-jupiter2 = cv2.imread(r'Plots\restored_jupiter2.png')
+jupiter1 = cv2.imread(r'restored_jupiter1.png')
+jupiter2 = cv2.imread(r'restored_jupiter2.png')
 
 """Creating filters"""
 def contrast_stretching(img, min, max):
