@@ -37,7 +37,8 @@ plt.show()
 """---Task c---"""
 
 def notch_reject_filter(shape, Q, u_k, v_k):
-    """Creates a notch reject filter with a circle of zeros around (u_k, v_k) with radius Q, where u_k and v_k is the distance from the center of the filter to the center of the circle of zeros."""
+    """Creates a notch reject filter with a circle of zeros around (u_k, v_k) with radius Q, 
+    where u_k and v_k is the distance from the center of the filter to the center of the circle of zeros."""
     M, N = shape
     # Initialize filter with zeros
     H = np.zeros((M, N))
