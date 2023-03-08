@@ -29,7 +29,7 @@ plt.show()
 eigenvalues, eigenvectors = np.linalg.eigh(L)
 
 # plotting the eigenvalues
-plt.plot(eigenvectors[:,2000], color='k')
+plt.plot(eigenvalues, color='k')
 plt.title('Eigenvalues')
 plt.xlabel('Eigenvalue number')
 plt.ylabel('Eigenvalue')
@@ -52,13 +52,20 @@ for i in range(len(eigenvalues)-1):
 """---Task 4.4---"""
 # plotting the fourier modes associated to the n-th eigenvalue
 # note that the eigenvectors are the columns in the eigenvectors matrix, not the rows
-n=10
+n = 1
 plt.scatter(X[:,0], X[:,1], c=eigenvectors[:,n], cmap='gray')
 plt.axis('off')
 plt.ylim(400, 0)
-plt.title('Eigenvalue number: 10')
+plt.title('Eigenvalue number: ' + str(n))
 plt.show()
 
+# also plotting the  line plot of the fourier mode
+plt.plot(eigenvectors[:,n], color='k')
+plt.title('Eigenvalue number: 10')
+plt.xlabel('eigenvector number')
+plt.ylabel('eigenvector value')
+plt.title('Fourier modes associated to the ' + str(n) + 'th eigenvalue')
+plt.show()
 
 """---Task 4.5---"""
 # computing the graph fourier transform of z
